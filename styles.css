@@ -5,3 +5,11 @@ i {
 .sidenav li>a {
   padding: 0 24px;
 }
+
+.logged-in {
+  display: none;
+}
+
+.logged-out {
+  display: none;
+}

@@ -99,6 +99,10 @@
           <input type="password" id="signup-password" required>
           <label for="signup-password">Choose password</label>
         </div>
+        <div class="input-field">
+          <input type="text" id="signup-bio" required>
+          <label for="signup-bio">One Line Bio</label>
+        </div>
         <button class="btn yellow darken-2 z-depth-0">Sign up</button>
         <button type="button" id="signup-cancel" class="btn yellow darken-2 z-depth-0">Cancel</button>
       </form>
@@ -118,6 +122,7 @@
           <label for="login-password">Your password</label>
         </div>
         <button class="btn yellow darken-2 z-depth-0">Login</button>
+        <button type="button" id="login-cancel" class="btn yellow darken-2 z-depth-0">Cancel</button>
       </form>
     </div>
   </div>
@@ -142,28 +147,13 @@
           <label for="content">Guide content</label>
         </div>
         <button class="btn yellow darken-2 z-depth-0">Create Guide</button>
+        <button type="button" id="create-cancel" class="btn yellow darken-2 z-depth-0">Cancel</button>
       </form>
     </div>
   </div>
   <!-- Guide list -->
   <div class="container" style="margin-top: 40px;">
     <ul class="collapsible z-depth-0 guides" style="border: none;">
-      <li>
-        <div class="collapsible-header grey lighten-4">Guide title</div>
-        <div class="collapsible-body white"><span>Lorem ipsum dolor sit</span></div>
-      </li>
-      <li>
-        <div class="collapsible-header grey lighten-4">Guide title</div>
-        <div class="collapsible-body white"><span>Lorem ipsum dolor sit</span></div>
-      </li>
-      <li>
-        <div class="collapsible-header grey lighten-4">Guide title</div>
-        <div class="collapsible-body white"><span>Lorem ipsum dolor sit</span></div>
-      </li>
-      <li>
-        <div class="collapsible-header grey lighten-4">Guide title</div>
-        <div class="collapsible-body white"><span>Lorem ipsum dolor sit</span></div>
-      </li>
       
     </ul>
   </div>
@@ -179,8 +169,8 @@
   <!-- Compiled and minified JavaScript -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js">
   </script>
+  <script type="module" src="scripts/index.js"></script>
   <script type="module" src="scripts/auth.js"></script>
-  <script src="scripts/index.js"></script>
   
 </body>
 </html>
