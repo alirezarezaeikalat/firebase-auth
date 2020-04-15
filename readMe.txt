@@ -133,7 +133,7 @@ auto id for the document, but we can use .doc(id).set({})
 
   we should make custom claims in server, not in the UI, because 
   it is not safe, we should make custom claims with cloud functions
-
+  
     a. cloud functions run on the server
     b. Good for code you don't want to expose on the clinet
     c. Perform tasks not available to client users
@@ -165,3 +165,46 @@ in index.js file we can require admin sdk in order to:
   const functions = require('firebase-functions');
   const admin = require('firebase-admin');
   admin.initializeApp();
+
+15. We can make a user admin by using setCustomUserClaims function:
+
+    exports.addAdminRole = functions.https.onCall(async (data, context) => {
+      // get user and add custom claim(admin)
+      try {
+        const user = await admin.auth().getUserByEmail(data.email);
+        await admin.auth().setCustomUserClaims(user.uid, {
+          admin: true
+        });
+        return {
+          message: `Succes ${data.email} has been made an admin`
+        };
+      }
+      catch(err) {
+        return err;
+      }
+    });
+
+[ATTENTION]
+16. This claims sends with the user info in the token, and you can
+ use this tokent information to render the ui,
+ we can get the token with getIdTokenResult() function:
+
+    auth.onAuthStateChanged(user => {
+      if(user){
+        user.getIdTokenResult().then(idTokenResult => {
+          user.admin = idTokenResult.claims.admin 
+        }); 
+        
+        // get data 
+        db.collection('guides').onSnapshot(snapshot => {
+          setupGuides(snapshot.docs);
+          setupUI(user);
+        }, (err) => {
+          console.log(err)
+        })
+        
+      } else {
+        setupUI(user);
+        setupGuides([]);
+      }
+    });  

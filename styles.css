@@ -13,3 +13,7 @@ i {
 .logged-out {
   display: none;
 }
+
+.admin{
+  display: none;
+}

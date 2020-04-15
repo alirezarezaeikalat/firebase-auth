@@ -1,5 +1,21 @@
 import {auth, db} from './firestore.js';
 import {setupGuides , setupUI} from './index.js';
+const functions = firebase.functions();
+const adminForm = document.querySelector('.admin-actions');
+
+
+// Add admin cloud function
+adminForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const adminEmail = document.querySelector('#admin-email').value;
+  const addAdminRole = functions.httpsCallable('addAdminRole');
+  addAdminRole({email: adminEmail}).then(result => {
+    console.log(result);
+    adminForm.reset();
+  }).catch(err => {
+    console.log(err.message);
+  })
+}) 
 
 // closign modal
 function closeModal(modalId, form) {
@@ -10,16 +26,20 @@ function closeModal(modalId, form) {
 
 // Listen for auth status change
 auth.onAuthStateChanged(user => {
-  
   if(user){
+    user.getIdTokenResult().then(idTokenResult => {
+      user.admin = idTokenResult.claims.admin 
+    }); 
+    
     // get data 
     db.collection('guides').onSnapshot(snapshot => {
       setupGuides(snapshot.docs);
+      setupUI(user);
     }, (err) => {
       console.log(err)
     })
-    setupUI(user);
-  }else {
+    
+  } else {
     setupUI(user);
     setupGuides([]);
   }
