@@ -2,7 +2,12 @@ import {auth, db} from './firestore.js';
 import {setupGuides , setupUI} from './index.js';
 const functions = firebase.functions();
 const adminForm = document.querySelector('.admin-actions');
-
+const signupForm = document.querySelector('#signup-form');
+const signupCancel = document.querySelector("#signup-cancel");
+const createForm = document.querySelector('#create-form');
+const createCancel = document.querySelector("#create-cancel");
+const loginForm = document.querySelector('#login-form');
+const loginCancel = document.querySelector("#login-cancel");
 
 // Add admin cloud function
 adminForm.addEventListener('submit', e => {
@@ -28,7 +33,7 @@ function closeModal(modalId, form) {
 auth.onAuthStateChanged(user => {
   if(user){
     user.getIdTokenResult().then(idTokenResult => {
-      user.admin = idTokenResult.claims.admin 
+      user.admin = idTokenResult.claims.admin; 
     }); 
     
     // get data 
@@ -46,8 +51,6 @@ auth.onAuthStateChanged(user => {
 });
 
 // Create Form
-const createForm = document.querySelector('#create-form');
-const createCancel = document.querySelector("#create-cancel");
 
   // cancel button
 createCancel.addEventListener('click', e => {
@@ -65,14 +68,9 @@ createForm.addEventListener('submit', (e) => {
     console.log(err.message);
   });
 });
+
 // sign up
-const signupForm = document.querySelector('#signup-form');
-const signupCancel = document.querySelector("#signup-cancel");
-
-
-
 // signup Form
-
       // cancel button
 signupCancel.addEventListener('click', e => {
   closeModal("modal-signup", signupForm);
@@ -90,7 +88,10 @@ signupForm.addEventListener('submit', (e) => {
         bio: signupForm['signup-bio'].value
       });
     }).then(() => {
+      signupForm.querySelector('.error').innerHTML = '';
       closeModal("modal-signup", signupForm);
+    }).catch(err => {
+      signupForm.querySelector('.error').innerHTML = err.message;
     });
 });
 
@@ -105,9 +106,6 @@ logouts.forEach(logout => {
 
 
 // Login form
-const loginForm = document.querySelector('#login-form');
-const loginCancel = document.querySelector("#login-cancel");
-
       // cancel button
 loginCancel.addEventListener('click', e => {
   closeModal("modal-login", loginForm);
@@ -115,14 +113,15 @@ loginCancel.addEventListener('click', e => {
 
 loginForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  
   // Get user info
   const email = loginForm['login-email'].value;
   const password = loginForm['login-password'].value;
   // login with firebase
   auth.signInWithEmailAndPassword(email, password).then(cred => {
-    
+    loginForm.querySelector('.error').innerHTML = '';
     closeModal("modal-login", loginForm);
+  }).catch(err => {
+    loginForm.querySelector('.error').innerHTML = err.message;
   });
 });
   

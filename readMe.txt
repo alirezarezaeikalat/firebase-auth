@@ -207,4 +207,45 @@ in index.js file we can require admin sdk in order to:
         setupUI(user);
         setupGuides([]);
       }
-    });  
+    });
+
+17. By hiding the ui in js file, we are not actually make our 
+    app safe, we have to add rule for creating guidez to allow 
+    only admins, create guidez:
+
+        rules_version = '2';
+        service cloud.firestore {
+          match /databases/{database}/documents {
+            match /users/{userId} {
+              allow create: if request.auth.uid != null;
+              allow read: if request.auth.uid == userId;
+            }
+            match /guides/{guide} {
+              allow read : if request.auth.uid != null;
+              allow write: if request.auth.token.admin == true;
+            }
+          }
+        } 
+
+18. If the user show the admin form for making the admin in the 
+    inspect element, there is no security for doing this, you have
+    to make sure that only admins, can add another admin: 
+
+    exports.addAdminRole = functions.https.onCall(async (data, context) => {
+      // get user and add custom claim(admin)
+      try {
+        if (context.auth.token.admin !== true) {
+          return { error: 'only admins can add other admin suckers'};
+        }
+        const user = await admin.auth().getUserByEmail(data.email);
+        await admin.auth().setCustomUserClaims(user.uid, {
+          admin: true
+        });
+        return {
+          message: `Succes ${data.email} has been made an admin`
+        };
+      }
+      catch(err) {
+        return err;
+      }
+    });
